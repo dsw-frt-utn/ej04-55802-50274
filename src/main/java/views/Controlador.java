@@ -1,13 +1,20 @@
 package views;
 
 import data.Persistencia;
+import domain.Sucursal;
 import domain.Vehiculo;
 import domain.VehiculoTipo;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import views.AgregarVehiculosView;
 
 public class Controlador {
+    static AgregarVehiculosView vehiculoView = new AgregarVehiculosView();
+
+    public Controlador() {
+    }
     
     public static ArrayList<VehiculoViewModel> getVehiculos(){
         ArrayList<VehiculoViewModel> vehiculos = new ArrayList<>();
@@ -30,5 +37,81 @@ public class Controlador {
            }
         }
         return new double[] {consumoElectricos, consumoCombustible};
+    }
+    
+    public static void iniciarVentanaVehiculo(){
+        vehiculoView.getlCampo1().setVisible(false);
+        vehiculoView.getTfCampo1().setVisible(false);
+        vehiculoView.getTfCampo2().setVisible(false);
+        vehiculoView.getlCampo2().setVisible(false);
+        vehiculoView.setVisible(true);
+        vehiculoView.getComboTipo().addItem("Eléctrico");
+        vehiculoView.getComboTipo().addItem("Combustible");
+        
+        vehiculoView.getComboMarca().removeAllItems();
+        vehiculoView.getComboMarca().addItem("-- Seleccione --");
+        for(List<String> fila : Persistencia.getMarcas()){
+            vehiculoView.getComboMarca().addItem(fila.get(0));
+        }
+        
+        vehiculoView.getComboSucursal().removeAllItems();
+        vehiculoView.getComboSucursal().addItem("-- Selecione --");
+        for(Sucursal sucursal : Persistencia.getSucursales()){
+            vehiculoView.getComboSucursal().addItem(sucursal.getCodigo());
+        }
+    }
+    
+    public static void actualizarVentanaVehiculo(){
+        String seleccion = (String)vehiculoView.getComboTipo().getSelectedItem();
+        switch(seleccion){
+            case "Eléctrico":
+                vehiculoView.getlCampo1().setText("kw/h:");
+                vehiculoView.getlCampo1().setVisible(true);
+                vehiculoView.getlCampo2().setVisible(false);
+                vehiculoView.getTfCampo1().setVisible(true);
+                vehiculoView.getTfCampo2().setVisible(false);
+                break;
+            case "Combustible":
+                vehiculoView.getlCampo1().setText("km/L:");
+                vehiculoView.getlCampo2().setText("L extra");
+                vehiculoView.getlCampo1().setVisible(true);
+                vehiculoView.getlCampo2().setVisible(true);
+                vehiculoView.getTfCampo1().setVisible(true);
+                vehiculoView.getTfCampo2().setVisible(true);
+                break;
+            default:
+                break;
+        }
+        
+        
+    }
+    
+    public static void guardarVehiculo(){
+        String tipo = vehiculoView.getComboTipo().getSelectedItem().toString();
+        String patente = vehiculoView.getTfPatente().getText();
+        String marcaNombre = vehiculoView.getComboMarca().getSelectedItem().toString();
+        String modelo = vehiculoView.getTfModelo().getText();
+        int anio = Integer.parseInt(vehiculoView.getTfAnio().getText());
+        double capacidad = Double.parseDouble(vehiculoView.getTfCapacidad().getText());
+        String sucursalNombre = vehiculoView.getComboSucursal().getSelectedItem().toString();
+        Double campo1 = Double.parseDouble(vehiculoView.getTfCampo1().getText());
+        
+        Sucursal sucursal = null;
+        for(Sucursal suc : Persistencia.getSucursales()){
+            if(suc.getCodigo().equals(sucursalNombre)){sucursal=suc;};
+            break;
+        }
+                
+        if(tipo.equals("Eléctrico")){
+            Persistencia.cargarElectrico(patente,marcaNombre,modelo,anio,capacidad,sucursal,campo1);
+        } else if(tipo.equals("Combustible")){
+            Double campo2 = Double.parseDouble(vehiculoView.getTfCampo2().getText());
+            Persistencia.cargarCombustible(patente,marcaNombre,modelo,anio,capacidad,sucursal,campo1,campo2);
+        }
+        
+        //iniciarVentanaVehiculo();
+        ListarVehiculosView ventana = new ListarVehiculosView();
+        ventana.setVisible(true);
+        System.out.println(Persistencia.getVehiculos());
     }
 }
