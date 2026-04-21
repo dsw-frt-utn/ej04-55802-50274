@@ -4,7 +4,7 @@
  */
 package views;
 
-import views.AgregarVehiculoView;
+import views.AgregarVehiculosView;
 import views.ListarVehiculosView;
 
 /**
@@ -107,8 +107,7 @@ public class MenuPrincipalView extends javax.swing.JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // Agregar Vehiculo
-        AgregarVehiculoView view = new AgregarVehiculoView();
-        view.setVisible(true);
+        Controlador.iniciarVentanaVehiculo();
         this.dispose();
     }//GEN-LAST:event_jButton2ActionPerformed
 

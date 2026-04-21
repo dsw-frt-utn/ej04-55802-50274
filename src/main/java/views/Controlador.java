@@ -4,6 +4,7 @@ import data.Persistencia;
 import domain.Sucursal;
 import domain.Vehiculo;
 import domain.VehiculoTipo;
+import domain.Marca;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -12,8 +13,10 @@ import views.AgregarVehiculosView;
 
 public class Controlador {
     static AgregarVehiculosView vehiculoView = new AgregarVehiculosView();
-
-    public Controlador() {
+    static MenuPrincipalView menuView = new MenuPrincipalView();
+    
+    public static void mostrarMenu () {
+        menuView.setVisible(true);
     }
     
     public static ArrayList<VehiculoViewModel> getVehiculos(){
@@ -50,8 +53,8 @@ public class Controlador {
         
         vehiculoView.getComboMarca().removeAllItems();
         vehiculoView.getComboMarca().addItem("-- Seleccione --");
-        for(List<String> fila : Persistencia.getMarcas()){
-            vehiculoView.getComboMarca().addItem(fila.get(0));
+        for(Marca fila : Persistencia.getMarcas()){
+            vehiculoView.getComboMarca().addItem(fila.getNombre());
         }
         
         vehiculoView.getComboSucursal().removeAllItems();
@@ -101,12 +104,19 @@ public class Controlador {
             if(suc.getCodigo().equals(sucursalNombre)){sucursal=suc;};
             break;
         }
-                
+        
+        Marca marca = null;
+        for(Marca marc : Persistencia.getMarcas()){
+            if(marc.getNombre().equals(marcaNombre)){
+                marca = marc;
+                break;
+            }
+        }   
         if(tipo.equals("Eléctrico")){
-            Persistencia.cargarElectrico(patente,marcaNombre,modelo,anio,capacidad,sucursal,campo1);
+            Persistencia.cargarElectrico(patente,marca,modelo,anio,capacidad,sucursal,campo1);
         } else if(tipo.equals("Combustible")){
             Double campo2 = Double.parseDouble(vehiculoView.getTfCampo2().getText());
-            Persistencia.cargarCombustible(patente,marcaNombre,modelo,anio,capacidad,sucursal,campo1,campo2);
+            Persistencia.cargarCombustible(patente,marca,modelo,anio,capacidad,sucursal,campo1,campo2);
         }
         
         //iniciarVentanaVehiculo();

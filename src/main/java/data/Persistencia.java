@@ -58,12 +58,12 @@ public class Persistencia {
     }
     
     public static void cargarElectrico(String patente,Marca marca,String modelo, int anio,double capacidad,Sucursal sucursal,double campo1){
-        VehiculoElectrico vehiculo = new VehiculoElectrico(patente,marcaNombre,modelo,anio,capacidad,sucursal,campo1);
+        VehiculoElectrico vehiculo = new VehiculoElectrico(patente,marca,modelo,anio,capacidad,sucursal,campo1);
         vehiculos.add(vehiculo);
     }
     
     public static void cargarCombustible(String patente,Marca marca,String modelo, int anio,double capacidad,Sucursal sucursal,double campo1, double campo2){
-        VehiculoCombustible vehiculo = new VehiculoCombustible(patente,marcaNombre,modelo,anio,capacidad,sucursal,campo1,campo2);
+        VehiculoCombustible vehiculo = new VehiculoCombustible(patente,marca,modelo,anio,capacidad,sucursal,campo1,campo2);
         vehiculos.add(vehiculo);
     }
     
